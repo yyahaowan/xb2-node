@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import * as userService from '../user/user.service';
 import { PUBLIC_KEY } from '../app/app.config';
 import { TokenPayload } from './auth.interface';
+import { possess } from './auth.service';
 
 // 验证用户数据
 export const validateLoginData = async (
@@ -67,4 +68,43 @@ export const authGuard = async (
   } catch (error) {
     next(new Error('UNAUTHORIZED'));
   }
+};
+
+// 访问控制
+interface accessControlOptions {
+  possession?: boolean;
+}
+
+export const accessControl = (
+  options: accessControlOptions = { possession: false },
+) => {
+  return async (req: Request, res: Response, next: NextFunction) => {
+    console.log('访问控制');
+
+    const { possession } = options;
+    const { id: userId } = req.body.user;
+
+    // 超级管理员
+    if (userId === 1) return next();
+
+    // 准备资源
+    const resourceIdParam = Object.keys(req.params)[0];
+    const resourceType = resourceIdParam.replace('Id', '');
+    const resourceId = parseInt(req.params[resourceIdParam], 10);
+
+    if (possession) {
+      // 检查资源所有权
+      try {
+        const onResource = await possess({ resourceId, resourceType, userId });
+        if (!onResource) {
+          return next(new Error('USER_DOES_NOT_OWN_RESOURCE'));
+        }
+      } catch (error) {
+        return next(error);
+      }
+    }
+
+    // 执行下一步
+    next();
+  };
 };

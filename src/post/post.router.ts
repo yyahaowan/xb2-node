@@ -1,5 +1,5 @@
 import express from 'express';
-import { authGuard } from '../auth/auth.middleware';
+import { authGuard, accessControl } from '../auth/auth.middleware';
 import { requestUrl } from '../app/app.middleware';
 import * as postController from './post.controller';
 
@@ -15,10 +15,21 @@ router.get('/posts', requestUrl, postController.index);
 router.post('/post', requestUrl, authGuard, postController.store);
 
 // 更新内容
-router.patch('/post/:postId', postController.update);
+router.patch(
+  '/post/:postId',
+  requestUrl,
+  authGuard,
+  accessControl({ possession: false }),
+  postController.update,
+);
 
 // 删除内容
-router.delete('/post/:postId', postController.deleteItem);
+router.delete(
+  '/post/:postId',
+  authGuard,
+  accessControl({ possession: false }),
+  postController.deleteItem,
+);
 
 // 导出路由
 export default router;
