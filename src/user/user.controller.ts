@@ -1,20 +1,30 @@
 import { Request, Response, NextFunction } from 'express';
-import { getPosts, createPost, updatePost, deletePost } from './post.service';
+import * as userService from './user.service';
 import _ from 'lodash';
+
+export const index_1 = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  const { username } = request.params;
+  try {
+    const user = await userService.getUser(username);
+    response.send(user);
+  } catch (error) {
+    // 异常则交给异常处理器处理
+    next(error);
+  }
+};
 
 export const index = async (
   request: Request,
   response: Response,
   next: NextFunction,
 ) => {
-  // if (request.headers.authorization === 'SECRET') {
-  // next(xxx) 将异常信息交由中间件处理
-  // 这里的return只是为了测试终止，不然经过中间件后续代码继续执行
-  //   return next(new Error());
-  // }
   try {
-    const posts = await getPosts();
-    response.send(posts);
+    const Users = await userService.getUsers();
+    response.send(Users);
   } catch (error) {
     // 异常则交给异常处理器处理
     next(error);
@@ -27,9 +37,9 @@ export const store = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { title, content } = request.body;
+  const { username, password } = request.body;
   try {
-    const data = await createPost({ title, content });
+    const data = await userService.createUser({ username, password });
     response.status(201).send(data);
   } catch (error) {
     next(error);
@@ -42,13 +52,13 @@ export const update = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { postId } = request.params;
+  const { userId } = request.params;
   // const { title, content } = request.body;
   // 用loadsh准备所需数据
-  const post = _.pick(request.body, ['title', 'content']);
+  const user = _.pick(request.body, ['name', 'password']);
 
   try {
-    const data = await updatePost(parseInt(postId, 10), post);
+    const data = await userService.updateUser(parseInt(userId, 10), user);
     response.status(201).send(data);
   } catch (error) {
     next(error);
@@ -61,9 +71,9 @@ export const deleteItem = async (
   response: Response,
   next: NextFunction,
 ) => {
-  const { postId } = request.params;
+  const { userId } = request.params;
   try {
-    const data = await deletePost(parseInt(postId, 10));
+    const data = await userService.deleteUser(parseInt(userId, 10));
     response.status(201).send(data);
   } catch (error) {
     next(error);
