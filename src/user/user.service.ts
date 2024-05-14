@@ -1,9 +1,21 @@
 import { connection } from '../app/database/mysql';
 import { UserModel } from './user.model';
 
-export const getUser = async (username: string) => {
+// 按用户名查找用户
+interface GetUserOptions {
+  password?: boolean;
+}
+
+export const getUser = async (
+  username: string,
+  options: GetUserOptions = {},
+) => {
+  const { password } = options;
   const statement = `
-    SELECT id,username
+    SELECT 
+      id,
+      username
+      ${password ? ', password' : ''}
     from user 
     WHERE username = ?
   `;

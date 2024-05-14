@@ -37,6 +37,14 @@ export const defaultErrorHandler = (
       statusCode = 409;
       message = '用户已存在 ~~ 😱';
       break;
+    case 'USER_DOES_NOT_EXISTS':
+      statusCode = 400;
+      message = '用户不存在 ~~ 😱';
+      break;
+    case 'PASSWORD_DOES_NOT_EXISTS':
+      statusCode = 400;
+      message = '密码不一致 ~~ 😱';
+      break;
     default:
       statusCode = 500;
       message = '服务器暂时出了点问题 ~~ 😭';
