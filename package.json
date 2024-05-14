@@ -2,7 +2,21 @@
   "name": "xb2-node",
   "version": "1.0.0",
   "description": "node演示项目",
-  "author":{
-    "name":"Kim_chen",
-    "email":"yyahaowan@qq.com"}
+  "author": {
+    "name": "Kim_chen",
+    "email": "yyahaowan@qq.com"
+  },
+  "scripts": {
+    "dev": "tsc-watch --onSuccess \"node dist/main.js\"",
+    "format": "prettier --write \"src/**/*.ts\""
+  },
+  "dependencies": {
+    "@types/express": "^4.17.21",
+    "express": "4.17.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.11",
+    "prettier": "^3.2.5",
+    "typescript": "^5.4.5"
+  }
 }
