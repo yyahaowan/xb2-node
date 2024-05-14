@@ -10,7 +10,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use(userRouter, postRouter, authRouter);
+app.use(userRouter, authRouter, postRouter);
 
 // 默认全局异常处理器
 app.use(defaultErrorHandler);

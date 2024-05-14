@@ -1,6 +1,27 @@
 import { Request, Response, NextFunction } from 'express';
-import { getPosts, createPost, updatePost, deletePost } from './post.service';
+import {
+  getPost,
+  getPosts,
+  createPost,
+  updatePost,
+  deletePost,
+} from './post.service';
 import _ from 'lodash';
+
+export const indexOne = async (
+  request: Request,
+  response: Response,
+  next: NextFunction,
+) => {
+  try {
+    const { postId } = request.params;
+    const post = await getPost(postId);
+    response.send(post);
+  } catch (error) {
+    // 异常则交给异常处理器处理
+    next(error);
+  }
+};
 
 export const index = async (
   request: Request,
@@ -28,8 +49,11 @@ export const store = async (
   next: NextFunction,
 ) => {
   const { title, content } = request.body;
+
+  const { id: userId } = request.body.user;
+
   try {
-    const data = await createPost({ title, content });
+    const data = await createPost({ title, content, userId });
     response.status(201).send(data);
   } catch (error) {
     next(error);

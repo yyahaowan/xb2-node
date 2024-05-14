@@ -2,6 +2,26 @@ import { connection } from '../app/database/mysql';
 import { PostModel } from './post.model';
 // 获取内容列表
 
+export const getPost = async (postId: string) => {
+  const statement = `
+    SELECT 
+      post.id,
+      post.title,
+      post.content,
+      JSON_OBJECT(
+        'id',user.id,
+        'username',user.username
+      ) as user
+    FROM post 
+    LEFT JOIN user 
+      ON post.userId=user.id where post.id=?
+  `;
+
+  const [data] = await connection.promise().query(statement, postId);
+
+  return data[0];
+};
+
 export const getPosts = async () => {
   const statement = `
     SELECT 
@@ -10,24 +30,12 @@ export const getPosts = async () => {
       post.content,
       JSON_OBJECT(
         'id',user.id,
-        'name',user.name
+        'username',user.username
       ) as user
     FROM post 
     LEFT JOIN user 
       ON post.userId=user.id
   `;
-
-  // const data = [
-  //   {
-  //     content: '明月出天山,苍茫云海间',
-  //   },
-  //   {
-  //     content: '长风几万里,吹度玉门关',
-  //   },
-  //   {
-  //     content: ' 汉家天子，玉关征戍难',
-  //   },
-  // ];
 
   const [data] = await connection.promise().query(statement);
 

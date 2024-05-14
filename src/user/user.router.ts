@@ -4,7 +4,7 @@ import { validateUserData, hashPassword } from './user.middleware';
 
 const router = express.Router();
 
-router.get('/user/:username', userController.index_1);
+router.get('/user/:username', userController.indexOne);
 
 // 获取列表
 router.get('/users', userController.index);

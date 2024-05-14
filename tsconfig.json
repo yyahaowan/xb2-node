@@ -104,6 +104,10 @@
 
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+    "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
+  },
+  // 这里要注意，不能只是files,不然会有缓存文件
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
+  "files": ["types/express.d.ts"]
 }

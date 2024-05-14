@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as userService from './user.service';
 import _ from 'lodash';
 
-export const index_1 = async (
+export const indexOne = async (
   request: Request,
   response: Response,
   next: NextFunction,
@@ -23,8 +23,8 @@ export const index = async (
   next: NextFunction,
 ) => {
   try {
-    const Users = await userService.getUsers();
-    response.send(Users);
+    const users = await userService.getUsers();
+    response.send(users);
   } catch (error) {
     // 异常则交给异常处理器处理
     next(error);
@@ -55,7 +55,7 @@ export const update = async (
   const { userId } = request.params;
   // const { title, content } = request.body;
   // 用loadsh准备所需数据
-  const user = _.pick(request.body, ['name', 'password']);
+  const user = _.pick(request.body, ['username', 'password']);
 
   try {
     const data = await userService.updateUser(parseInt(userId, 10), user);
