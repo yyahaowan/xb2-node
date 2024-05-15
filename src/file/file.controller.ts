@@ -28,6 +28,7 @@ export const store = async (
       ...fileInfo,
       userId,
       postId: parseInt(postId as string, 10),
+      ...request.fileMetaData,
     });
     response.status(201).send(data);
   } catch (error) {
