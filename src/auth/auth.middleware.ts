@@ -62,7 +62,7 @@ export const authGuard = async (
     const decoded = jwt.verify(token, PUBLIC_KEY, { algorithms: ['RS256'] });
 
     // 在请求里面添加当前用户
-    req.body.user = decoded as TokenPayload;
+    req.user = decoded as TokenPayload;
 
     next();
   } catch (error) {
